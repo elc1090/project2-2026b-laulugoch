@@ -2,7 +2,7 @@ import os
 
 import psycopg
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 load_dotenv()
 
@@ -78,6 +78,72 @@ def pedidos():
 
     except Exception as erro:
         return f"Erro: {erro}"
+
+
+@app.route("/pedidos", methods=["POST"])
+def criar_pedido():
+    dados = request.get_json()
+
+    nome = dados["aluno"]["nome"]
+    endereco = dados["aluno"]["endereco"]
+
+    conexao = psycopg.connect(
+        host=os.environ["DB_HOST"],
+        port=os.environ["DB_PORT"],
+        dbname=os.environ["DB_NAME"],
+        user=os.environ["DB_USER"],
+        password=os.environ["DB_PASSWORD"]
+    )
+
+    cursor = conexao.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO alunos (nome, endereco)
+        VALUES (%s, %s)
+        RETURNING id;
+        """,
+        (nome, endereco)
+    )
+
+    aluno_id = cursor.fetchone()[0]
+
+    status = dados["status"]
+
+    cursor.execute(
+        """
+        INSERT INTO pedidos (aluno_id, status)
+        VALUES (%s, %s)
+        RETURNING id;
+        """,
+        (aluno_id, status)
+    )
+
+    pedido_id = cursor.fetchone()[0]
+
+    for item in dados["itens"]:
+        cursor.execute(
+            """
+            INSERT INTO itens_pedido (pedido_id, item, categoria, quantidade)
+            VALUES (%s, %s, %s, %s);
+            """,
+            (
+                pedido_id,
+                item["item"],
+                item["categoria"],
+                item["quantidade"]
+            )
+        )
+
+        conexao.commit()
+
+    cursor.close()
+    conexao.close()
+
+    return jsonify({
+        "mensagem": "Pedido criado com sucesso!",
+        "pedido_id": pedido_id
+    }), 201
 
 
 if __name__ == "__main__":
