@@ -5,6 +5,7 @@ from database import conectar_banco
 
 doadores_bp = Blueprint("doadores", __name__)
 
+
 @doadores_bp.route("/doadores")
 def doadores():
     try:
@@ -41,6 +42,7 @@ def criar_doador():
     dados = request.get_json()
 
     nome = dados["nome"]
+    email = dados["email"]
 
     try:
         conexao = conectar_banco()
@@ -49,14 +51,28 @@ def criar_doador():
 
         cursor.execute(
             """
-            INSERT INTO doadores (nome)
-            VALUES (%s)
-            RETURNING id;
+            SELECT id
+            FROM doadores
+            WHERE email = %s;
             """,
-            (nome,)
+            (email,)
         )
 
-        doador_id = cursor.fetchone()[0]
+        resultado = cursor.fetchone()
+
+        if resultado is not None:
+            doador_id = resultado[0]
+        else:
+            cursor.execute(
+                """
+                INSERT INTO doadores (nome, email)
+                VALUES (%s, %s)
+                RETURNING id;
+                """,
+                (nome, email)
+            )
+
+            doador_id = cursor.fetchone()[0]
 
         conexao.commit()
 

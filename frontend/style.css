@@ -24,3 +24,71 @@ main {
     padding: 20px;
     margin-bottom: 20px;
 }
+
+.opcoes {
+    display: flex;
+    gap: 20px;
+}
+
+.opcoes button {
+    padding: 15px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #4a90e2;
+    color: white;
+}
+
+#formularioPedido {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+#formularioPedido label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+#formularioPedido input,
+#formularioPedido select {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+#botaoEnviar {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.itemPedido {
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fafafa;
+}
+
+.itemPedido label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.itemPedido input,
+.itemPedido select {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 16px;
+}

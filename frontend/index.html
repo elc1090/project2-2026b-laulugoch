@@ -1,25 +1,101 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acolhe Aluno</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <header>
         <h1>Acolhe Aluno</h1>
-        <p>Pedidos de alunos que precisam de materiais escolares.</p>
+        <p>Conectando quem precisa de ajuda com quem quer ajudar</p>
     </header>
 
     <main>
-        <h2>Pedidos disponíveis</h2>
+        <h2 id="tituloInicial">Como você quer participar?</h2>
 
-        <div id="pedidos"></div>
+        <div class="opcoes">
+            <button id="botaoAjuda">Preciso de ajuda</button>
+            <button id="botaoDoar">Quero ajudar</button>
+        </div>
+
+        <div id="listaPedidos" style="display: none;">
+            <h2>Encontre um pedido para ajudar</h2>
+
+            <label for="filtroCategoria">Categoria:</label>
+
+            <select id="filtroCategoria">
+                <option value="todas">Todas</option>
+                <option value="Material escolar">Material escolar</option>
+                <option value="Uniforme">Uniforme</option>
+                <option value="Mochila">Mochila</option>
+                <option value="Outros">Outros</option>
+            </select>
+
+            <div id="pedidos"></div>
+        </div>
+
+        <div id="formularioDoador" style="display: none;">
+            <h2>Quero ajudar</h2>
+
+            <p id="pedidoSelecionado"></p>
+
+            <label for="nomeDoador">Nome:</label>
+            <input type="text" id="nomeDoador">
+
+            <label for="emailDoador">E-mail:</label>
+            <input type="email" id="emailDoador">
+
+            <button id="botaoConfirmarInteresse">Demonstrar interesse</button>
+        </div>
+
+        <div id="formularioPedido" style="display: none;">
+            <h2>Cadastre seu pedido</h2>
+
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome">
+
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco">
+
+            <h3>Itens que precisa</h3>
+
+            <div id="itensPedido">
+
+                <div class="itemPedido">
+
+                    <h4>Item 1</h4>
+                    
+                    <label>Item:</label>
+                    <input type="text" class="nomeItem">
+
+                    <label>Categoria:</label>
+                    <select class="categoriaItem">
+                        <option value="Material escolar">Material escolar</option>
+                        <option value="Uniforme">Uniforme</option>
+                        <option value="Mochila">Mochila</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+
+                    <label>Quantidade:</label>
+                    <input type="number" class="quantidadeItem" min="1">
+
+                </div>
+
+            </div>
+
+            <button type="button" id="botaoAdicionarItem">Adicionar outro item</button>
+
+            <button id="botaoEnviar">Cadastrar pedido</button>
+        </div>
     </main>
 
     <script src="script.js"></script>
 
 </body>
+
 </html>

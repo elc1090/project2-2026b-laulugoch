@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from psycopg.errors import UniqueViolation
 
 from database import conectar_banco
 
@@ -37,6 +38,15 @@ def criar_interesse():
             "mensagem": "Interesse registrado com sucesso!",
             "interesse_id": interesse_id
         }), 201
+
+    except UniqueViolation:
+        conexao.rollback()
+        cursor.close()
+        conexao.close()
+
+        return jsonify({
+            "mensagem": "Você já demonstrou interesse neste pedido."
+        }), 200
 
     except Exception as erro:
         return f"Erro: {erro}"
