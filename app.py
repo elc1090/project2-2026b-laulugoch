@@ -79,6 +79,158 @@ def pedidos():
     except Exception as erro:
         return f"Erro: {erro}"
 
+@app.route("/pedidos/<int:id>")
+def pedido_por_id(id):
+    try:
+        conexao = psycopg.connect(
+            host=os.environ["DB_HOST"],
+            port=os.environ["DB_PORT"],
+            dbname=os.environ["DB_NAME"],
+            user=os.environ["DB_USER"],
+            password=os.environ["DB_PASSWORD"]
+        )
+
+        cursor = conexao.cursor()
+
+        cursor.execute("""
+            SELECT
+                pedidos.id,
+                alunos.nome,
+                alunos.endereco,
+                pedidos.status,
+                itens_pedido.item,
+                itens_pedido.categoria,
+                itens_pedido.quantidade
+            FROM pedidos
+            JOIN alunos
+                ON pedidos.aluno_id = alunos.id
+            JOIN itens_pedido
+                ON pedidos.id = itens_pedido.pedido_id
+            WHERE pedidos.id = %s;
+        """, (id,))
+
+        resultados = cursor.fetchall()
+
+        cursor.close()
+        conexao.close()
+
+        if len(resultados) == 0:
+            return jsonify({
+                "erro": "Pedido não encontrado"
+            }), 404
+
+        pedido = {
+            "id": resultados[0][0],
+            "aluno": resultados[0][1],
+            "endereco": resultados[0][2],
+            "status": resultados[0][3],
+            "itens": []
+        }
+
+        for resultado in resultados:
+            pedido["itens"].append({
+                "item": resultado[4],
+                "categoria": resultado[5],
+                "quantidade": resultado[6]
+            })
+
+        return jsonify(pedido)
+
+    except Exception as erro:
+        return f"Erro: {erro}"
+
+@app.route("/pedidos/<int:id>", methods=["PUT"])
+def atualizar_pedido(id):
+    dados = request.get_json()
+
+    nome = dados["aluno"]["nome"]
+    endereco = dados["aluno"]["endereco"]
+    status = dados["status"]
+
+    try:
+        conexao = psycopg.connect(
+            host=os.environ["DB_HOST"],
+            port=os.environ["DB_PORT"],
+            dbname=os.environ["DB_NAME"],
+            user=os.environ["DB_USER"],
+            password=os.environ["DB_PASSWORD"]
+        )
+
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            """
+            SELECT aluno_id
+            FROM pedidos
+            WHERE id = %s;
+            """,
+            (id,)
+        )
+
+        resultado = cursor.fetchone()
+
+        if resultado is None:
+            cursor.close()
+            conexao.close()
+
+            return jsonify({
+                "erro": "Pedido não encontrado"
+            }), 404
+
+        aluno_id = resultado[0]
+
+        cursor.execute(
+            """
+            UPDATE alunos
+            SET nome = %s, endereco = %s
+            WHERE id = %s;
+            """,
+            (nome, endereco, aluno_id)
+        )
+
+        cursor.execute(
+            """
+            UPDATE pedidos
+            SET status = %s
+            WHERE id = %s;
+            """,
+            (status, id)
+        )
+
+        cursor.execute(
+            """
+            DELETE FROM itens_pedido
+            WHERE pedido_id = %s;
+            """,
+            (id,)
+        )
+
+        for item in dados["itens"]:
+            cursor.execute(
+                """
+                INSERT INTO itens_pedido
+                    (pedido_id, item, categoria, quantidade)
+                VALUES (%s, %s, %s, %s);
+                """,
+                (
+                    id,
+                    item["item"],
+                    item["categoria"],
+                    item["quantidade"]
+                )
+            )
+
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
+        return jsonify({
+            "mensagem": "Pedido atualizado com sucesso!"
+        })
+
+    except Exception as erro:
+        return f"Erro: {erro}"
 
 @app.route("/pedidos", methods=["POST"])
 def criar_pedido():
@@ -135,7 +287,7 @@ def criar_pedido():
             )
         )
 
-        conexao.commit()
+    conexao.commit()
 
     cursor.close()
     conexao.close()
