@@ -111,6 +111,12 @@ botaoConfirmarInteresse.addEventListener("click", async function () {
     const resultadoInteresse = await respostaInteresse.json();
 
     alert(resultadoInteresse.mensagem);
+
+    formularioDoador.style.display = "none";
+    listaPedidos.style.display = "block";
+
+    document.getElementById("nomeDoador").value = "";
+    document.getElementById("emailDoador").value = "";
 });
 
 botaoAjuda.addEventListener("click", function () {
