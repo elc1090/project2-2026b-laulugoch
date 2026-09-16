@@ -24,3 +24,11 @@ CREATE TABLE doadores (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL
 );
+
+CREATE TABLE interesses (
+    id SERIAL PRIMARY KEY,
+    doador_id INTEGER NOT NULL,
+    pedido_id INTEGER NOT NULL,
+    FOREIGN KEY (doador_id) REFERENCES doadores(id),
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
+);
