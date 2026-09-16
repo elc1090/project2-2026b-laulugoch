@@ -11,6 +11,8 @@
 <body>
 
     <header>
+        <button id="botaoVoltarEdicao">← Voltar</button>
+
         <h1>Acolhe Aluno</h1>
         <p>Conectando quem precisa de ajuda com quem quer ajudar</p>
     </header>
@@ -21,6 +23,11 @@
         <div class="opcoes">
             <button id="botaoAjuda">Preciso de ajuda</button>
             <button id="botaoDoar">Quero ajudar</button>
+        </div>
+
+        <div id="opcoesAjuda" style="display: none;">
+            <button id="botaoCadastrarPedido">Cadastrar um pedido</button>
+            <button id="botaoGerenciarPedidos">Gerenciar pedidos</button>
         </div>
 
         <div id="listaPedidos" style="display: none;">
@@ -69,7 +76,7 @@
                 <div class="itemPedido">
 
                     <h4>Item 1</h4>
-                    
+
                     <label>Item:</label>
                     <input type="text" class="nomeItem">
 
@@ -91,6 +98,35 @@
             <button type="button" id="botaoAdicionarItem">Adicionar outro item</button>
 
             <button id="botaoEnviar">Cadastrar pedido</button>
+        </div>
+
+        <div id="formularioEdicao" style="display: none;">
+            <h2>Editar pedido</h2>
+
+            <label for="nomeEdicao">Nome:</label>
+            <input type="text" id="nomeEdicao">
+
+            <label for="enderecoEdicao">Endereço:</label>
+            <input type="text" id="enderecoEdicao">
+
+            <label for="statusEdicao">Status:</label>
+            <select id="statusEdicao">
+                <option value="disponivel">Disponível</option>
+                <option value="em andamento">Em andamento</option>
+                <option value="atendido">Atendido</option>
+            </select>
+
+            <h3>Itens que precisa</h3>
+
+            <div id="itensEdicao"></div>
+
+            <button type="button" id="botaoAdicionarItemEdicao">
+                Adicionar outro item
+            </button>
+
+            <button type="button" id="botaoSalvarEdicao">
+                Salvar alterações
+            </button>
         </div>
     </main>
 

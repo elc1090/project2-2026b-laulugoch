@@ -5,13 +5,6 @@ body {
     background-color: #f5f5f5;
 }
 
-header {
-    background-color: #4a90e2;
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
 main {
     max-width: 900px;
     margin: 30px auto;
@@ -91,4 +84,72 @@ main {
     padding: 10px;
     box-sizing: border-box;
     font-size: 16px;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.status.disponivel {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status.andamento {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status.atendido {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.botaoAtendido {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.botoesGerenciamento {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.botaoEditar,
+.botaoExcluir,
+.botaoAtendido {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+header {
+    background-color: #4a90e2;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+#botaoVoltarEdicao {
+    display: none;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: white;
+    color: #333333;
 }

@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, request
 
 from database import conectar_banco
 
-
 pedidos_bp = Blueprint("pedidos", __name__)
 
 
@@ -49,16 +48,18 @@ def pedidos():
                     "aluno": resultado[1],
                     "endereco": resultado[2],
                     "status": resultado[3],
-                    "itens": []
+                    "itens": [],
                 }
 
                 lista_pedidos.append(pedido_encontrado)
 
-            pedido_encontrado["itens"].append({
-                "item": resultado[4],
-                "categoria": resultado[5],
-                "quantidade": resultado[6]
-            })
+            pedido_encontrado["itens"].append(
+                {
+                    "item": resultado[4],
+                    "categoria": resultado[5],
+                    "quantidade": resultado[6],
+                }
+            )
 
         return jsonify(lista_pedidos)
 
@@ -73,7 +74,8 @@ def pedido_por_id(id):
 
         cursor = conexao.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT
                 pedidos.id,
                 alunos.nome,
@@ -88,7 +90,9 @@ def pedido_por_id(id):
             JOIN itens_pedido
                 ON pedidos.id = itens_pedido.pedido_id
             WHERE pedidos.id = %s;
-        """, (id,))
+        """,
+            (id,),
+        )
 
         resultados = cursor.fetchall()
 
@@ -96,24 +100,24 @@ def pedido_por_id(id):
         conexao.close()
 
         if len(resultados) == 0:
-            return jsonify({
-                "erro": "Pedido não encontrado"
-            }), 404
+            return jsonify({"erro": "Pedido não encontrado"}), 404
 
         pedido = {
             "id": resultados[0][0],
             "aluno": resultados[0][1],
             "endereco": resultados[0][2],
             "status": resultados[0][3],
-            "itens": []
+            "itens": [],
         }
 
         for resultado in resultados:
-            pedido["itens"].append({
-                "item": resultado[4],
-                "categoria": resultado[5],
-                "quantidade": resultado[6]
-            })
+            pedido["itens"].append(
+                {
+                    "item": resultado[4],
+                    "categoria": resultado[5],
+                    "quantidade": resultado[6],
+                }
+            )
 
         return jsonify(pedido)
 
@@ -140,7 +144,7 @@ def atualizar_pedido(id):
             FROM pedidos
             WHERE id = %s;
             """,
-            (id,)
+            (id,),
         )
 
         resultado = cursor.fetchone()
@@ -149,9 +153,7 @@ def atualizar_pedido(id):
             cursor.close()
             conexao.close()
 
-            return jsonify({
-                "erro": "Pedido não encontrado"
-            }), 404
+            return jsonify({"erro": "Pedido não encontrado"}), 404
 
         aluno_id = resultado[0]
 
@@ -161,7 +163,7 @@ def atualizar_pedido(id):
             SET nome = %s, endereco = %s
             WHERE id = %s;
             """,
-            (nome, endereco, aluno_id)
+            (nome, endereco, aluno_id),
         )
 
         cursor.execute(
@@ -170,7 +172,7 @@ def atualizar_pedido(id):
             SET status = %s
             WHERE id = %s;
             """,
-            (status, id)
+            (status, id),
         )
 
         cursor.execute(
@@ -178,7 +180,7 @@ def atualizar_pedido(id):
             DELETE FROM itens_pedido
             WHERE pedido_id = %s;
             """,
-            (id,)
+            (id,),
         )
 
         for item in dados["itens"]:
@@ -188,12 +190,7 @@ def atualizar_pedido(id):
                     (pedido_id, item, categoria, quantidade)
                 VALUES (%s, %s, %s, %s);
                 """,
-                (
-                    id,
-                    item["item"],
-                    item["categoria"],
-                    item["quantidade"]
-                )
+                (id, item["item"], item["categoria"], item["quantidade"]),
             )
 
         conexao.commit()
@@ -201,9 +198,43 @@ def atualizar_pedido(id):
         cursor.close()
         conexao.close()
 
-        return jsonify({
-            "mensagem": "Pedido atualizado com sucesso!"
-        })
+        return jsonify({"mensagem": "Pedido atualizado com sucesso!"})
+
+    except Exception as erro:
+        return f"Erro: {erro}"
+
+
+@pedidos_bp.route("/pedidos/<int:id>/atendido", methods=["PUT"])
+def atender_pedido(id):
+    try:
+        conexao = conectar_banco()
+
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            """
+            UPDATE pedidos
+            SET status = 'atendido'
+            WHERE id = %s
+            RETURNING id;
+            """,
+            (id,),
+        )
+
+        resultado = cursor.fetchone()
+
+        if resultado is None:
+            cursor.close()
+            conexao.close()
+
+            return jsonify({"erro": "Pedido não encontrado"}), 404
+
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
+        return jsonify({"mensagem": "Pedido marcado como atendido!"})
 
     except Exception as erro:
         return f"Erro: {erro}"
@@ -222,7 +253,7 @@ def excluir_pedido(id):
             FROM pedidos
             WHERE id = %s;
             """,
-            (id,)
+            (id,),
         )
 
         resultado = cursor.fetchone()
@@ -231,18 +262,24 @@ def excluir_pedido(id):
             cursor.close()
             conexao.close()
 
-            return jsonify({
-                "erro": "Pedido não encontrado"
-            }), 404
+            return jsonify({"erro": "Pedido não encontrado"}), 404
 
         aluno_id = resultado[0]
+
+        cursor.execute(
+            """
+            DELETE FROM interesses
+            WHERE pedido_id = %s;
+            """,
+            (id,),
+        )
 
         cursor.execute(
             """
             DELETE FROM itens_pedido
             WHERE pedido_id = %s;
             """,
-            (id,)
+            (id,),
         )
 
         cursor.execute(
@@ -250,7 +287,7 @@ def excluir_pedido(id):
             DELETE FROM pedidos
             WHERE id = %s;
             """,
-            (id,)
+            (id,),
         )
 
         cursor.execute(
@@ -258,7 +295,7 @@ def excluir_pedido(id):
             DELETE FROM alunos
             WHERE id = %s;
             """,
-            (aluno_id,)
+            (aluno_id,),
         )
 
         conexao.commit()
@@ -266,9 +303,7 @@ def excluir_pedido(id):
         cursor.close()
         conexao.close()
 
-        return jsonify({
-            "mensagem": "Pedido excluído com sucesso!"
-        })
+        return jsonify({"mensagem": "Pedido excluído com sucesso!"})
 
     except Exception as erro:
         return f"Erro: {erro}"
@@ -291,7 +326,7 @@ def criar_pedido():
         VALUES (%s, %s)
         RETURNING id;
         """,
-        (nome, endereco)
+        (nome, endereco),
     )
 
     aluno_id = cursor.fetchone()[0]
@@ -304,7 +339,7 @@ def criar_pedido():
         VALUES (%s, %s)
         RETURNING id;
         """,
-        (aluno_id, status)
+        (aluno_id, status),
     )
 
     pedido_id = cursor.fetchone()[0]
@@ -315,12 +350,7 @@ def criar_pedido():
             INSERT INTO itens_pedido (pedido_id, item, categoria, quantidade)
             VALUES (%s, %s, %s, %s);
             """,
-            (
-                pedido_id,
-                item["item"],
-                item["categoria"],
-                item["quantidade"]
-            )
+            (pedido_id, item["item"], item["categoria"], item["quantidade"]),
         )
 
     conexao.commit()
@@ -328,10 +358,11 @@ def criar_pedido():
     cursor.close()
     conexao.close()
 
-    return jsonify({
-        "mensagem": "Pedido criado com sucesso!",
-        "pedido_id": pedido_id
-    }), 201
+    return (
+        jsonify({"mensagem": "Pedido criado com sucesso!", "pedido_id": pedido_id}),
+        201,
+    )
+
 
 @pedidos_bp.route("/pedidos/<int:id>/interesses")
 def interesses_do_pedido(id):
@@ -340,7 +371,8 @@ def interesses_do_pedido(id):
 
         cursor = conexao.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT
                 interesses.id,
                 doadores.id,
@@ -349,7 +381,9 @@ def interesses_do_pedido(id):
             JOIN doadores
                 ON interesses.doador_id = doadores.id
             WHERE interesses.pedido_id = %s;
-        """, (id,))
+        """,
+            (id,),
+        )
 
         resultados = cursor.fetchall()
 
@@ -359,16 +393,15 @@ def interesses_do_pedido(id):
         lista_doadores = []
 
         for resultado in resultados:
-            lista_doadores.append({
-                "interesse_id": resultado[0],
-                "doador_id": resultado[1],
-                "doador": resultado[2]
-            })
+            lista_doadores.append(
+                {
+                    "interesse_id": resultado[0],
+                    "doador_id": resultado[1],
+                    "doador": resultado[2],
+                }
+            )
 
-        return jsonify({
-            "pedido_id": id,
-            "doadores": lista_doadores
-        })
+        return jsonify({"pedido_id": id, "doadores": lista_doadores})
 
     except Exception as erro:
         return f"Erro: {erro}"
