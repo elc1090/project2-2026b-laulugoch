@@ -77,3 +77,42 @@ def interesses():
 
     except Exception as erro:
         return f"Erro: {erro}"
+
+
+@interesses_bp.route("/interesses/<int:id>", methods=["DELETE"])
+def excluir_interesse(id):
+    try:
+        conexao = conectar_banco()
+
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            """
+            DELETE FROM interesses
+            WHERE id = %s
+            RETURNING id;
+            """,
+            (id,)
+        )
+
+        resultado = cursor.fetchone()
+
+        if resultado is None:
+            cursor.close()
+            conexao.close()
+
+            return jsonify({
+                "erro": "Interesse não encontrado"
+            }), 404
+
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
+        return jsonify({
+            "mensagem": "Interesse excluído com sucesso!"
+        })
+
+    except Exception as erro:
+        return f"Erro: {erro}"

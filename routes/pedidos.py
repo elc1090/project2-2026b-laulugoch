@@ -332,3 +332,43 @@ def criar_pedido():
         "mensagem": "Pedido criado com sucesso!",
         "pedido_id": pedido_id
     }), 201
+
+@pedidos_bp.route("/pedidos/<int:id>/interesses")
+def interesses_do_pedido(id):
+    try:
+        conexao = conectar_banco()
+
+        cursor = conexao.cursor()
+
+        cursor.execute("""
+            SELECT
+                interesses.id,
+                doadores.id,
+                doadores.nome
+            FROM interesses
+            JOIN doadores
+                ON interesses.doador_id = doadores.id
+            WHERE interesses.pedido_id = %s;
+        """, (id,))
+
+        resultados = cursor.fetchall()
+
+        cursor.close()
+        conexao.close()
+
+        lista_doadores = []
+
+        for resultado in resultados:
+            lista_doadores.append({
+                "interesse_id": resultado[0],
+                "doador_id": resultado[1],
+                "doador": resultado[2]
+            })
+
+        return jsonify({
+            "pedido_id": id,
+            "doadores": lista_doadores
+        })
+
+    except Exception as erro:
+        return f"Erro: {erro}"
