@@ -232,6 +232,76 @@ def atualizar_pedido(id):
     except Exception as erro:
         return f"Erro: {erro}"
 
+@app.route("/pedidos/<int:id>", methods=["DELETE"])
+def excluir_pedido(id):
+    try:
+        conexao = psycopg.connect(
+            host=os.environ["DB_HOST"],
+            port=os.environ["DB_PORT"],
+            dbname=os.environ["DB_NAME"],
+            user=os.environ["DB_USER"],
+            password=os.environ["DB_PASSWORD"]
+        )
+
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            """
+            SELECT aluno_id
+            FROM pedidos
+            WHERE id = %s;
+            """,
+            (id,)
+        )
+
+        resultado = cursor.fetchone()
+
+        if resultado is None:
+            cursor.close()
+            conexao.close()
+
+            return jsonify({
+                "erro": "Pedido não encontrado"
+            }), 404
+
+        aluno_id = resultado[0]
+
+        cursor.execute(
+            """
+            DELETE FROM itens_pedido
+            WHERE pedido_id = %s;
+            """,
+            (id,)
+        )
+
+        cursor.execute(
+            """
+            DELETE FROM pedidos
+            WHERE id = %s;
+            """,
+            (id,)
+        )
+
+        cursor.execute(
+            """
+            DELETE FROM alunos
+            WHERE id = %s;
+            """,
+            (aluno_id,)
+        )
+
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
+        return jsonify({
+            "mensagem": "Pedido excluído com sucesso!"
+        })
+
+    except Exception as erro:
+        return f"Erro: {erro}"
+
 @app.route("/pedidos", methods=["POST"])
 def criar_pedido():
     dados = request.get_json()
