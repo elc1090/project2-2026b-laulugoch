@@ -22,7 +22,8 @@ CREATE TABLE itens_pedido (
 
 CREATE TABLE doadores (
     id SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(150)
 );
 
 CREATE TABLE interesses (
@@ -30,5 +31,6 @@ CREATE TABLE interesses (
     doador_id INTEGER NOT NULL,
     pedido_id INTEGER NOT NULL,
     FOREIGN KEY (doador_id) REFERENCES doadores(id),
-    FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    CONSTRAINT interesse_unico UNIQUE (doador_id, pedido_id)
 );

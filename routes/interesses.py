@@ -3,8 +3,8 @@ from psycopg.errors import UniqueViolation
 
 from database import conectar_banco
 
-
 interesses_bp = Blueprint("interesses", __name__)
+
 
 @interesses_bp.route("/interesses", methods=["POST"])
 def criar_interesse():
@@ -20,33 +20,73 @@ def criar_interesse():
 
         cursor.execute(
             """
+            SELECT status
+            FROM pedidos
+            WHERE id = %s;
+            """,
+            (pedido_id,),
+        )
+
+        resultado = cursor.fetchone()
+
+        if resultado is None:
+            cursor.close()
+            conexao.close()
+
+            return jsonify({"erro": "Pedido não encontrado"}), 404
+
+        if resultado[0] != "disponivel":
+            cursor.close()
+            conexao.close()
+
+            return (
+                jsonify(
+                    {"erro": "Este pedido já está sendo atendido."}
+                ),
+                400,
+            )
+
+        cursor.execute(
+            """
             INSERT INTO interesses (doador_id, pedido_id)
             VALUES (%s, %s)
             RETURNING id;
             """,
-            (doador_id, pedido_id)
+            (doador_id, pedido_id),
         )
 
         interesse_id = cursor.fetchone()[0]
+
+        cursor.execute(
+            """
+            UPDATE pedidos
+            SET status = 'em andamento'
+            WHERE id = %s;
+            """,
+            (pedido_id,),
+        )
 
         conexao.commit()
 
         cursor.close()
         conexao.close()
 
-        return jsonify({
-            "mensagem": "Interesse registrado com sucesso!",
-            "interesse_id": interesse_id
-        }), 201
+        return (
+            jsonify(
+                {
+                    "mensagem": "Interesse registrado com sucesso!",
+                    "interesse_id": interesse_id,
+                }
+            ),
+            201,
+        )
 
     except UniqueViolation:
         conexao.rollback()
         cursor.close()
         conexao.close()
 
-        return jsonify({
-            "mensagem": "Você já demonstrou interesse neste pedido."
-        }), 200
+        return jsonify({"mensagem": "Você já demonstrou interesse neste pedido."}), 200
 
     except Exception as erro:
         return f"Erro: {erro}"
@@ -77,11 +117,9 @@ def interesses():
         lista_interesses = []
 
         for resultado in resultados:
-            lista_interesses.append({
-                "id": resultado[0],
-                "doador": resultado[1],
-                "pedido_id": resultado[2]
-            })
+            lista_interesses.append(
+                {"id": resultado[0], "doador": resultado[1], "pedido_id": resultado[2]}
+            )
 
         return jsonify(lista_interesses)
 
@@ -102,7 +140,7 @@ def excluir_interesse(id):
             WHERE id = %s
             RETURNING id;
             """,
-            (id,)
+            (id,),
         )
 
         resultado = cursor.fetchone()
@@ -111,18 +149,14 @@ def excluir_interesse(id):
             cursor.close()
             conexao.close()
 
-            return jsonify({
-                "erro": "Interesse não encontrado"
-            }), 404
+            return jsonify({"erro": "Interesse não encontrado"}), 404
 
         conexao.commit()
 
         cursor.close()
         conexao.close()
 
-        return jsonify({
-            "mensagem": "Interesse excluído com sucesso!"
-        })
+        return jsonify({"mensagem": "Interesse excluído com sucesso!"})
 
     except Exception as erro:
         return f"Erro: {erro}"

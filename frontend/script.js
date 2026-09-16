@@ -110,7 +110,11 @@ botaoConfirmarInteresse.addEventListener("click", async function () {
 
     const resultadoInteresse = await respostaInteresse.json();
 
-    alert(resultadoInteresse.mensagem);
+    if (resultadoInteresse.mensagem) {
+        alert(resultadoInteresse.mensagem);
+    } else {
+        alert(resultadoInteresse.erro);
+    }
 
     formularioDoador.style.display = "none";
     listaPedidos.style.display = "block";
@@ -212,7 +216,7 @@ botaoEnviar.addEventListener("click", async function () {
             nome: nome,
             endereco: endereco
         },
-        status: "disponível",
+        status: "disponivel",
         itens: itens
     };
 
