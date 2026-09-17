@@ -66,12 +66,37 @@ Precisava consultar informações que já estavam armazenadas no PostgreSQL e ut
 **2. Persistência das alterações com `commit()`**
 
 ```python
+conexao = conectar_banco()
+
+cursor = conexao.cursor()
+
+cursor.execute(
+    """
+    INSERT INTO interesses (doador_id, pedido_id)
+    VALUES (%s, %s)
+    RETURNING id;
+    """,
+    (doador_id, pedido_id),
+)
+
+interesse_id = cursor.fetchone()[0]
+
+cursor.execute(
+    """
+    UPDATE pedidos
+    SET status = 'em andamento'
+    WHERE id = %s;
+    """,
+    (pedido_id,),
+)
+
 conexao.commit()
+
 cursor.close()
 conexao.close()
 ```
 
-Para trabalhar com a persistência de dados no servidor, precisei entender como as alterações feitas pelo Python eram efetivamente salvas no PostgreSQL. Descobri que, após operações como cadastro, edição ou exclusão, é necessário utilizar o `commit()` para confirmar a transação. Neste trecho, o `commit()` confirma as alterações realizadas no banco, enquanto `cursor.close()` e `conexao.close()` encerram o cursor e a conexão com o PostgreSQL.
+Para trabalhar com a persistência de dados no servidor, precisei entender como as alterações feitas pelo Python eram efetivamente salvas no PostgreSQL. Nesse processo, aprendi a utilizar a `conexao` para estabelecer a conexão com o banco e o `cursor` para executar as consultas. Descobri que, após operações como cadastro, edição ou exclusão, é necessário utilizar o `commit()` para confirmar a transação. Neste trecho, o `commit()` confirma as alterações realizadas no banco, enquanto `cursor.close()` e `conexao.close()` encerram o cursor e a conexão com o PostgreSQL.
 
 **3. Utilização de `JOIN`**
 
