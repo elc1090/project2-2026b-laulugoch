@@ -49,7 +49,50 @@ Por fim, fiz os testes das principais funcionalidades e publiquei a aplicação 
 
 ### Trechos de código
 
-Indique pelo menos 3 trechos de código que você queira destacar para a turma (por exemplo, para explicar algo que aprendeu, para alertar sobre alguma dificuldade de compreensão, para mostrar uma curiosidade, etc).
+**1. Busca de resultados com `fetchone()` e `fetchall()`**
+
+```python
+cursor.execute("""
+    SELECT id
+    FROM doadores
+    WHERE email = %s;
+""", (email,))
+
+resultado = cursor.fetchone()
+```
+
+Precisava consultar informações que já estavam armazenadas no PostgreSQL e utilizar esses resultados dentro do Python. Descobri as funções `fetchone()` e `fetchall()`, que permitem recuperar os resultados de uma consulta. O `fetchone()` recupera um único resultado, enquanto o `fetchall()` recupera todos os resultados encontrados Neste trecho, a aplicação procura um doador pelo e-mail e o `fetchone()` recupera seu `id`. Isso foi utilizado para verificar se o doador já estava cadastrado antes de criar um novo registro.
+
+**2. Persistência das alterações com `commit()`**
+
+```python
+conexao.commit()
+cursor.close()
+conexao.close()
+```
+
+Para trabalhar com a persistência de dados no servidor, precisei entender como as alterações feitas pelo Python eram efetivamente salvas no PostgreSQL. Descobri que, após operações como cadastro, edição ou exclusão, é necessário utilizar o `commit()` para confirmar a transação. Neste trecho, o `commit()` confirma as alterações realizadas no banco, enquanto `cursor.close()` e `conexao.close()` encerram o cursor e a conexão com o PostgreSQL.
+
+**3. Utilização de `JOIN`**
+
+```sql
+SELECT
+    pedidos.id,
+    alunos.nome,
+    alunos.endereco,
+    pedidos.status,
+    itens_pedido.item,
+    itens_pedido.categoria,
+    itens_pedido.quantidade
+FROM pedidos
+JOIN alunos
+    ON pedidos.aluno_id = alunos.id
+JOIN itens_pedido
+    ON pedidos.id = itens_pedido.pedido_id;
+```
+
+Ao organizar o banco, precisei separar as informações em diferentes tabelas, mas depois precisava exibir os dados de um pedido junto com as informações do aluno e dos itens. Para isso, descobri o `JOIN`, que permite relacionar tabelas por meio de campos em comum. Neste trecho, os pedidos são relacionados às tabelas `alunos` e `itens_pedido`, permitindo recuperar todas essas informações em uma única consulta.
+
 
 
 ## Tecnologias
@@ -69,7 +112,6 @@ Indique pelo menos 3 trechos de código que você queira destacar para a turma (
 
 ## Referências e créditos
 
-Substitua este trecho por uma lista bem detalhada de todo material que você consultou para ajudar no projeto, por exemplo:  URLs de vídeos ou outro material consultado, créditos para colegas que colaboraram, geradores de código, etc.
 - Tutorial introdução ao Python com Flask: https://www.youtube.com/watch?v=Z1RJmh_OqeA
 - Tutorial Python: https://docs.python.org/pt-br/3.15/tutorial/index.html
 - Aplicação com Flask: https://flask.palletsprojects.com/en/stable/quickstart/
