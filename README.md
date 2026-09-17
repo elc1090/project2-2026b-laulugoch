@@ -32,7 +32,7 @@ Substitua este texto por um feedback produzido pelo(a) colega parceiro(a). Na mo
 
 Comecei o desenvolvimento pesquisando um pouco mais sobre as tecnologias que havia escolhido para o projeto, principalmente sobre Flask e Python, pois eu nunca havia utilizado. Primeiro criei um ambiente virtual com `venv` e fiz alguns testes simples com o Flask para verificar se o servidor estava funcionando e entender melhor como as rotas funcionavam.
 
-Depois, comecei a trabalhar com o banco de dados e precisei instaler a biblioteca `psycopg`, que permite fazer a conexão entre o Python e o PostgreSQL. Antes de integrar tudo com o Flask, fiz alguns testes diretamente no banco utilizando dados fictícios. No início, criei uma tabela mais simples para testar pedidos, inserindo alguns itens e verificando se o Flask conseguia buscar essas informações no PostgreSQL. Esse processo também me ajudou a entender melhor como as tabelas precisavam ser organizadas.
+Depois, comecei a trabalhar com o banco de dados e precisei instalar a biblioteca `psycopg`, que permite fazer a conexão entre o Python e o PostgreSQL. Antes de integrar tudo com o Flask, fiz alguns testes diretamente no banco utilizando dados fictícios. No início, criei uma tabela mais simples para testar pedidos, inserindo alguns itens e verificando se o Flask conseguia buscar essas informações no PostgreSQL. Esse processo também me ajudou a entender melhor como as tabelas precisavam ser organizadas.
 
 A partir desses testes, fui definindo uma estrutura mais completa para o banco, separando as informações em tabelas para alunos, pedidos, itens dos pedidos, doadores e interesses. Também passei a utilizar um arquivo `schema.sql` para criar as tabelas, em vez de fazer toda a criação manualmente pelo terminal. Nesse processo, aprendi a utilizar `JOIN` nas consultas SQL, que foi necessário para reunir informações que estavam em tabelas diferentes, como os dados do aluno, do pedido e dos itens solicitados.
 
@@ -61,7 +61,7 @@ cursor.execute("""
 resultado = cursor.fetchone()
 ```
 
-Precisava consultar informações que já estavam armazenadas no PostgreSQL e utilizar esses resultados dentro do Python. Descobri as funções `fetchone()` e `fetchall()`, que permitem recuperar os resultados de uma consulta. O `fetchone()` recupera um único resultado, enquanto o `fetchall()` recupera todos os resultados encontrados Neste trecho, a aplicação procura um doador pelo e-mail e o `fetchone()` recupera seu `id`. Isso foi utilizado para verificar se o doador já estava cadastrado antes de criar um novo registro.
+Precisava consultar informações que já estavam armazenadas no PostgreSQL e utilizar esses resultados dentro do Python. Descobri as funções `fetchone()` e `fetchall()`, que permitem recuperar os resultados de uma consulta. O `fetchone()` recupera um único resultado, enquanto o `fetchall()` recupera todos os resultados encontrados. Neste trecho, a aplicação procura um doador pelo e-mail e o `fetchone()` recupera seu `id`. Isso foi utilizado para verificar se o doador já estava cadastrado antes de criar um novo registro.
 
 **2. Persistência das alterações com `commit()`**
 
@@ -131,7 +131,7 @@ Ao organizar o banco, precisei separar as informações em diferentes tabelas, m
 
 ### Ambiente de desenvolvimento
 
-- VS Code + Live Preview
+- VS Code
 - Chat GPT gratuito
 - Render
 
