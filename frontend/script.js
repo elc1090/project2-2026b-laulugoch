@@ -29,13 +29,19 @@ function mostrarPedidos(lista) {
 
         const divPedido = document.createElement("div");
 
+        divPedido.classList.add("pedido");
+
+        if (!modoGerenciamento) {
+            divPedido.classList.add("pedidoAjuda");
+        }
+
         let itens = "";
 
         for (const item of pedido.itens) {
             itens += `
                 <li>
                     ${item.quantidade}x ${item.item}
-                    (${item.categoria})
+                    <span class="categoria">${item.categoria}</span>
                 </li>
             `;
         }
@@ -65,11 +71,11 @@ function mostrarPedidos(lista) {
 
             botoesGerenciamento = `
                 <button class="botaoEditar" data-pedido-id="${pedido.id}">
-                    Editar pedido
+                    Editar
                 </button>
 
                 <button class="botaoExcluir" data-pedido-id="${pedido.id}">
-                    Excluir pedido
+                    Excluir
                 </button>
             `;
         }
@@ -242,6 +248,7 @@ const botaoDoar = document.getElementById("botaoDoar");
 const listaPedidos = document.getElementById("listaPedidos");
 const tituloInicial = document.getElementById("tituloInicial");
 const formularioDoador = document.getElementById("formularioDoador");
+const boasVindas = document.getElementById("boasVindas");
 const pedidoSelecionado = document.getElementById("pedidoSelecionado");
 const botaoConfirmarInteresse = document.getElementById("botaoConfirmarInteresse");
 const opcoesAjuda = document.getElementById("opcoesAjuda");
@@ -298,8 +305,9 @@ botaoAjuda.addEventListener("click", function () {
 
     opcoes.style.display = "none";
     tituloInicial.style.display = "none";
-    opcoesAjuda.style.display = "block";
+    opcoesAjuda.style.display = "flex";
     botaoVoltar.style.display = "block";
+    boasVindas.style.display = "none";
 });
 
 botaoCadastrarPedido.addEventListener("click", function () {
@@ -329,6 +337,7 @@ botaoDoar.addEventListener("click", function () {
     tituloInicial.style.display = "none";
     listaPedidos.style.display = "block";
     botaoVoltar.style.display = "block";
+    boasVindas.style.display = "none";
 
     mostrarPedidos(pedidos);
 });
@@ -471,17 +480,18 @@ botaoVoltar.addEventListener("click", function () {
         tituloInicial.style.display = "block";
         botaoVoltar.style.display = "none";
         telaAtual = "inicio";
+        boasVindas.style.display = "block";
     }
 
     else if (telaAtual === "cadastro") {
         formularioPedido.style.display = "none";
-        opcoesAjuda.style.display = "block";
+        opcoesAjuda.style.display = "flex";
         telaAtual = "ajuda";
     }
 
     else if (telaAtual === "gerenciamento") {
         listaPedidos.style.display = "none";
-        opcoesAjuda.style.display = "block";
+        opcoesAjuda.style.display = "flex";
         botaoVoltar.style.display = "block";
         telaAtual = "ajuda";
     }
@@ -499,6 +509,7 @@ botaoVoltar.addEventListener("click", function () {
         tituloInicial.style.display = "block";
         botaoVoltar.style.display = "none";
         telaAtual = "inicio";
+        boasVindas.style.display = "block";
     }
 });
 

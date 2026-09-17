@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Poppins", sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f5f5f5;
@@ -13,41 +13,69 @@ main {
 
 .pedido {
     background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e5e5;
 }
 
 .opcoes {
     display: flex;
-    gap: 20px;
+    gap: 25px;
+    justify-content: center;
+    margin-top: 40px;
 }
 
 .opcoes button {
-    padding: 15px 25px;
-    font-size: 16px;
+    width: 280px;
+    padding: 22px 25px;
+    font-size: 18px;
+    font-weight: bold;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
-    background-color: #4a90e2;
-    color: white;
-}
-
-#formularioPedido {
     background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 30px;
+    color: #333333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e5e5;
+    transition: 0.2s;
 }
 
-#formularioPedido label {
+.opcoes button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+#formularioPedido,
+#formularioEdicao {
+    background-color: white;
+    padding: 28px;
+    border-radius: 12px;
+    margin-top: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e5e5;
+    box-sizing: border-box;
+}
+
+#formularioPedido h2,
+#formularioEdicao h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+#formularioPedido label,
+#formularioEdicao label {
     display: block;
     margin-top: 15px;
     margin-bottom: 5px;
 }
 
 #formularioPedido input,
-#formularioPedido select {
+#formularioPedido select,
+#formularioEdicao input,
+#formularioEdicao select {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -57,6 +85,8 @@ main {
 #botaoEnviar {
     margin-top: 20px;
     padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
     background-color: #4a90e2;
     color: white;
     border: none;
@@ -121,16 +151,38 @@ main {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .botaoEditar,
-.botaoExcluir,
-.botaoAtendido {
-    padding: 8px 12px;
+.botaoExcluir {
+    padding: 9px 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
+    transition: 0.2s;
+}
+
+.botaoEditar {
+    background-color: #eef4fb;
+    color: #357abd;
+}
+
+.botaoEditar:hover {
+    background-color: #dce9f7;
+    transform: translateY(-1px);
+}
+
+.botaoExcluir {
+    background-color: #fbeeee;
+    color: #d9534f;
+}
+
+.botaoExcluir:hover {
+    background-color: #f7dada;
+    transform: translateY(-1px);
 }
 
 header {
@@ -146,10 +198,265 @@ header {
     position: absolute;
     left: 20px;
     top: 20px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
+    padding: 9px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
     cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+#botaoVoltarEdicao:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateX(-2px);
+}
+
+.pedido h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 20px;
+}
+
+.pedido p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.pedido ul {
+    margin-top: 8px;
+    padding-left: 25px;
+}
+
+.pedido li {
+    margin-bottom: 6px;
+}
+
+.pedido {
+    position: relative;
+}
+
+.pedido > .status {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+}
+
+#listaPedidos > label {
+    display: block;
+    margin-top: 25px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+#filtroCategoria {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid #d5d5d5;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+}
+
+.pedidoAjuda h3 {
+    margin-top: 40px;
+}
+
+#tituloInicial {
+    text-align: center;
+}
+
+#boasVindas {
+    margin-top: 90px;
+    text-align: center;
+    color: #777777;
+}
+
+#boasVindas h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #666666;
+}
+
+#boasVindas p {
+    max-width: 650px;
+    margin: 0 auto;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.botaoInteresse {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.botaoInteresse:hover {
+    background-color: #357abd;
+    transform: translateY(-1px);
+}
+
+#opcoesAjuda {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 35px;
+    width: 100%;
+}
+
+#opcoesAjuda button {
+    width: 320px;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
     background-color: white;
     color: #333333;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#opcoesAjuda button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+#botaoAdicionarItem {
+    margin-top: 10px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #357abd;
+    background-color: #eef4fb;
+    border: 1px solid #dce9f7;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#botaoAdicionarItem:hover {
+    background-color: #dce9f7;
+    transform: translateY(-1px);
+}
+
+#botaoAdicionarItemEdicao {
+    margin-top: 10px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #357abd;
+    background-color: #eef4fb;
+    border: 1px solid #dce9f7;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#botaoAdicionarItemEdicao:hover {
+    background-color: #dce9f7;
+    transform: translateY(-1px);
+}
+
+#botaoSalvarEdicao {
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#botaoSalvarEdicao:hover {
+    background-color: #357abd;
+    transform: translateY(-1px);
+}
+
+.categoria {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 4px 9px;
+    border-radius: 12px;
+    background-color: #f0f0f0;
+    color: #666666;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#formularioDoador {
+    background-color: white;
+    padding: 28px;
+    border-radius: 12px;
+    margin-top: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e5e5;
+    box-sizing: border-box;
+}
+
+#formularioDoador h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+#formularioDoador p {
+    margin-bottom: 25px;
+    color: #666666;
+    line-height: 1.5;
+}
+
+#formularioDoador label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+#formularioDoador input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+}
+
+#botaoConfirmarInteresse {
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#botaoConfirmarInteresse:hover {
+    background-color: #357abd;
+    transform: translateY(-1px);
 }
