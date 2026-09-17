@@ -4,7 +4,7 @@ let modoGerenciamento = false;
 let telaAtual = "inicio";
 
 async function carregarPedidos() {
-    const resposta = await fetch("http://127.0.0.1:5000/pedidos");
+    const resposta = await fetch("/pedidos");
 
     pedidos = await resposta.json();
 
@@ -134,7 +134,7 @@ function mostrarPedidos(lista) {
                 const pedidoId = botaoMarcarAtendido.dataset.pedidoId;
 
                 const resposta = await fetch(
-                    "http://127.0.0.1:5000/pedidos/" + pedidoId + "/atendido",
+                    "/pedidos/" + pedidoId + "/atendido",
                     {
                         method: "PUT"
                     }
@@ -157,7 +157,7 @@ function mostrarPedidos(lista) {
                 pedidoSelecionadoId = pedidoId;
 
                 const resposta = await fetch(
-                    "http://127.0.0.1:5000/pedidos/" + pedidoId
+                    "/pedidos/" + pedidoId
                 );
 
                 const pedido = await resposta.json();
@@ -221,7 +221,7 @@ function mostrarPedidos(lista) {
                 }
 
                 const resposta = await fetch(
-                    "http://127.0.0.1:5000/pedidos/" + pedidoId,
+                    "/pedidos/" + pedidoId,
                     {
                         method: "DELETE"
                     }
@@ -259,7 +259,7 @@ botaoConfirmarInteresse.addEventListener("click", async function () {
     const nome = document.getElementById("nomeDoador").value;
     const email = document.getElementById("emailDoador").value;
 
-    const respostaDoador = await fetch("http://127.0.0.1:5000/doadores", {
+    const respostaDoador = await fetch("/doadores", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -272,7 +272,7 @@ botaoConfirmarInteresse.addEventListener("click", async function () {
 
     const resultadoDoador = await respostaDoador.json();
 
-    const respostaInteresse = await fetch("http://127.0.0.1:5000/interesses", {
+    const respostaInteresse = await fetch("/interesses", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -427,7 +427,7 @@ botaoEnviar.addEventListener("click", async function () {
         itens: itens
     };
 
-    const resposta = await fetch("http://127.0.0.1:5000/pedidos", {
+    const resposta = await fetch("/pedidos", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -575,7 +575,7 @@ botaoSalvarEdicao.addEventListener("click", async function () {
     };
 
     const resposta = await fetch(
-        "http://127.0.0.1:5000/pedidos/" + pedidoSelecionadoId,
+        "/pedidos/" + pedidoSelecionadoId,
         {
             method: "PUT",
             headers: {
