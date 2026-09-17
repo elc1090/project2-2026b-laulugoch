@@ -1,8 +1,7 @@
 # Projeto: Aplicação com persistência de dados em backend
 
 
-![Substitua a imagem ao lado por um GIF/WEBP animado mostrando seu projeto](./moho_follow_through2.gif "GIF animado do projeto. Imagem temporária de Moho Animation https://moho.lostmarble.com/products/moho-pro-special-halls-head-college")
-
+<img width="1280" height="721" alt="AjudaAluno" src="https://github.com/user-attachments/assets/a2ac8786-1556-4d83-b116-344de8e741a1" />
 
 
 ## Acesso
